@@ -4,11 +4,12 @@ import './App.css';
 
 function App() {
   return (
+    // JSX(JavaScript の構文拡張)
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.tsx</code> and save to reload.
+          hello world!!!
         </p>
         <a
           className="App-link"
