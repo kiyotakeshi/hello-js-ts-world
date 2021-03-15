@@ -527,12 +527,188 @@ Uncaught TypeError: Class constructor Foo cannot be invoked without 'new'
 - バンドラ、Typescript のコンパイラにより最適化されたコードは JavaScript エンジンにとって解釈しやすいものになりパフォーマンスが上がる
     - ネイティブアプリのビルドと遜色ない作業で、ビルド先がバイナリかテキストコードかの違い
 
+---
+- 関数型プログラミングの関数は、数学の関数と同じもの
+    - *同じ入力に対して同じ作用と同じ出力が保証されている*
+        - *参照透過性*と呼ばれる
 
+- 参照透過的な関数を組み合わせて解決すべき問題に対処する、宣言型のプログラミングのスタイル
 
+- プログラミングのパラダイム
+    - 命令型プログラミング(Imperative Programming) と 宣言型プログラミング(Declarative Programming) に大別される
+        - *命令型は、最終的な出力を得るために、状態を変化させる連続した文によって記述される*
+            - ステップ順に指示をたどると料理が出来上がるレシピと同じ
+            - 命令型に分類されるパラダイムが、 *手続き型(Procedural)* と *オブジェクト指向(Object-Oriented)*
+        - *宣言型は、出力の性質、あるべき状態を宣言することでプログラムを構成する*
+            - SQL がもっとも有名な宣言型プログラミング言語
+                - どのようにデータベースにアクセスしてデータを取得するかという手続きでなく、*どんなデータが欲しいかを宣言することで出力を得る*
+            - 宣言型で複雑な処理を行うための解が関数型プログラミング
+                - 出力のあるべき状態を数学的に定義
 
+- [手続き型と関数型で同じ結果を書く](practice/comparison.js)
 
+- 関数型で書いた方は変数に一度も再代入や破壊的変更が起きない
+    - immutability(不変性)を守ることでプログラムから副作用が排除される
+        - 副作用とは、あるリソースの変更がアウトプットに影響を与えたり、参照透過性を壊してしまうこと
 
+- 関数型では最初から完成を見据えた形で大雑把なところから絞り込んでいく
+    - 1 ~ 100 の整数配列を作り、8で割り切れるものを抜き出す
 
+- [コレクションの反復処理(Array オブジェクトのプロトタイプメソッドを使用)](practice/array-iterate.js)
 
+- [reduce,sort](practice/array-iterate2.js)
 
+- [includs](practice/includes.js)
+
+- [オブジェクトの反復処理](practice/object-iterate.js)
+
+---
+- map() は対象の配列の要素一つ一つを任意に加工した新しい配列を返す
+    - 関数に別の関数を引数として渡す
+    - **JavaScript では関数は第一級オブジェクト**
+        - **変数への代入ができ、配列の要素やオブジェクトのプロパティ、関数の引数や戻り値になることができるオブジェクト**
+        - 厳密には、JavaScript は関数型言語に分類されないが、この性質が関数型プログラミングを支える
+
+```
+> const double = (n) => n * 2;
+> [1,2,3].map(double);
+[ 2, 4, 6 ]
+```
+
+- `map((n) => n * 2)` も map() に対してアロー関数による無名関数を渡している
+
+- [高階関数(Higher Order Function)](practice/greeter.js)
+    - 引数に関数を取ったり、戻り値として関数を返したりする関数のこと
+    - **コールバックはこの引数として渡される関数のこと**
+
+- [カリー化](practice/curried.js)
+    - 複数の引数を取る関数をより少ない引数を取る関数に分割して入れ子にすること
+
+- [カリー化された関数の部分適用](practice/partial.js)
+    - カリー化された関数の一部の引数を固定して新しい関数を作ること
+
+- クロージャー
+    - 関数を関数で閉じて包む
+
+- 閉じられていない場合
+    -  グローバル変数である count に依存している
+    - グローバル変数はどこからも参照でき書き換えができる
+    - *increment関数は参照透過的ではなく、挙動が予測不能な関数となる*
+
+```
+let count = 0;
+
+const increment = () => {
+    return count++;
+};
+```
+
+```
+> .load practice/open-counter.js
+> count
+0
+> increment()
+> increment()
+> count
+2
+```
+
+- increment を丸ごと関数の中に入れる
+    - 閉じ込めている外側の関数 counter はエンクロージャとも呼ばれる
+    - count は内側の関数の引数でもなく、 increment() 自身のローカル変数でもない
+    - count は自由変数と呼ばれる
+        - 高水準言語である JavaScript では不要になったメモリ領域を解放する処理は GC(Garbage Collector) が行う
+        - GC はカレントスコープと [他から参照されているものは解放しない](practice/orange.js)
+
+- 自由変数を参照する内側の関数 increment() がエンクロージャにより返されて外のスコープで生きているので count も GC に回収されていない
+
+- *クロージャは必ず内側の関数を返す必要はない、外のスコープの自由変数を参照する関数を関数で包んだ状態を差す*
+
+```
+const counter = () => {
+    let count = 0;
+
+    const increment = () => {
+        return count++;
+    };
+
+    return increment;
+};
+```
+
+```
+> .load practice/closure-counter.js
+
+> const increment = counter();
+
+> increment()
+0
+> increment()
+1
+```
+
+- 最終的な完成形
+
+```
+> const counter = (count = 0) => (adds = 1) => count += adds;
+> const increment = counter();
+> increment();
+1
+> increment();
+2
+> increment(2);
+4
+
+> const incrementFrom1 = counter(1);
+> incrementFrom1();
+2
+> incrementFrom1(2);
+4
+```
+
+- Promise
+    - ES2015から導入された標準組み込みオブジェクト
+    - 非同期処理の最終的な処理結果の値を約束するもの
+    - 任意の非同期処理の完了を待って次の処理を行うことができるようになった
+
+- Promise 登場以前(Callback Hell)
+    - foo.txt -> bar.txt -> baz.txt と順に読み込む場合
+    - コールバックを使わずに同じ階層に書くと、読み込みが終わったものから順番の保証なく表示されてしまう
+
+```
+fs.readfile('foo.txt', (err, data) => {
+    console.log('foo:', data);
+    fs.readfile('bar.txt', (err, data) => {
+        console.log('bar:', data);
+        fs.readfile('baz.txt', (err, data) => {
+            console.log('baz:', data);
+        });
+    });
+});
+```
+
+- [Promise を作って使う](practice/promise.js)
+
+- [Promise のハンドリング](practice/async/get-user-then.js)
+    - 非同期処理を扱うライブラリは Promise オブジェクトで値を返す
+
+- [async, await を使って書き直す](practice/async/get-user-await.js)
+    - await 演算子が使えるのは非同期関数の中だけ
+    - TypeScript だと Top-Level await という非同期関数でなくても await がつかえる機能が提供
+
+---
+- TypeScript がメジャーになった要因
+    - 静的型付け、型推論、Null安全性 というトレンドを抑えつつ、JavaScriptと同じ構文であるところ
+    - Go,Rust,Kotlin,Swift もこれらの要素を備えている
+
+- Ruby,Python,PHP といった LL(Lightweight Language) にカテゴライズされる動的型付け言語のチーム開発が大規模化していき、TDDが重要視されていった
+    - 静的な型チェックがない分、メソッドの引数や返り値の型検証をテストで保証する必要があった
+
+- 新たな言語は型推論により、プログラマが型を書かなくても言語処理系が文脈から予測してくれるように
+
+- Null安全性も備え、コンパイル時に null アクセスエラーになる可能性のあるコードをチェック
+
+- 静的片付け言語はIDEとの相性もいい
+    - コンパイルしなくても、リアルタイムで問題を指摘
+    - 前後の文脈から型が絞られることで、入力補完のサジェストの精度も高まる
 
