@@ -1,27 +1,11 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
 
 function App() {
-  return (
-    // JSX(JavaScript の構文拡張)
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          hello world!!!
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    // const name = 'patty';
+    const name = '';
+    const greet = (name: string) => <p>hello, {name || 'Guest'}</p>;
+    // {} の中には 式(値を返す表現) のみ記載可能 = if, for などの制御文はかけない
+    return <div>{greet(name)}</div>;
 }
 
 export default App;
