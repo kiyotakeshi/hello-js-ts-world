@@ -28,21 +28,33 @@ function App() {
     //     </div>
     // );
 
-    const list = ['patty', 'rolley', 'boddy'];
+    // const list = ['patty', 'rolley', 'boddy'];
+    // // 繰り返し処理
+    // return (
+    //     <ul>
+    //         {
+    //             // list.map((name) => {
+    //             // return <li>Hello, {name}</li>;
+    //             // })
+    //             list.map((name) => (
+    //                 <li>Hello, {name}!</li>
+    //             ))
+    //         }
+    //     </ul>
+    // );
 
-    // 繰り返し処理
-    return (
-        <ul>
-            {
-                // list.map((name) => {
-                // return <li>Hello, {name}</li>;
-                // })
-                list.map((name) => (
-                    <li>Hello, {name}!</li>
-                ))
-            }
-        </ul>
-    );
+    // 複数の要素が含まれるときはトップレベルが一つの要素でないといけない
+    const elems = (
+        // <React.Fragment> の省略記法
+        <>
+        <div>foo</div>
+        <div>bar</div>
+        <div>baz</div>
+        </>
+    )
+    return(
+        <div>{elems}</div>
+    )
 }
 
 export default App;
