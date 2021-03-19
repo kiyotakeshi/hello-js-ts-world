@@ -8,24 +8,40 @@ function App() {
     // テンプレートでは制御構文が積極的に用いられるが JSX では使えない、常に値を返す式でないといけない
     // return <div>{greet(name)}</div>;
 
-    const n = Math.floor(Math.random() * 10);
-    console.log(n);
-    const thereshold = 5;
+    // const n = Math.floor(Math.random() * 10);
+    // console.log(n);
+    // const thereshold = 5;
+    // return (
+    //     <div>
+    //         {/* 何も出力されない */}
+    //         {undefined}
+    //         {null}
+    //         {true}
+    //         {false}
+
+    //         {/* boblean 値が出力されない特性を生かして、レンダリングするものを分ける */}
+    //         {/* if 文の代用で && 論理演算子によるショートサーキット評価を使用 */}
+    //         {n > thereshold && <p>{n} is lager than {thereshold}</p>}
+
+    //         {/* if-else 文の代用で三項演算子を用いる */}
+    //         <p>{n} is {n % 2 === 0 ? 'even' : 'odd'}</p>
+    //     </div>
+    // );
+
+    const list = ['patty', 'rolley', 'boddy'];
+
+    // 繰り返し処理
     return (
-        <div>
-            {/* 何も出力されない */}
-            {undefined}
-            {null}
-            {true}
-            {false}
-
-            {/* boblean 値が出力されない特性を生かして、レンダリングするものを分ける */}
-            {/* if 文の代用で && 論理演算子によるショートサーキット評価を使用 */}
-            {n > thereshold && <p>{n} is lager than {thereshold}</p>}
-
-            {/* if-else 文の代用で三項演算子を用いる */}
-            <p>{n} is {n % 2 === 0 ? 'even' : 'odd'}</p>
-        </div>
+        <ul>
+            {
+                // list.map((name) => {
+                // return <li>Hello, {name}</li>;
+                // })
+                list.map((name) => (
+                    <li>Hello, {name}!</li>
+                ))
+            }
+        </ul>
     );
 }
 
