@@ -18,9 +18,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    // "jsx": "react-jsx" // TypeScript 4.1 以降は新しい JSX 変換形式に対応
-    "jsx": "react"
-  }
+    "jsx": "react-jsx"
+  },
   "include": [
     "src"
   ]

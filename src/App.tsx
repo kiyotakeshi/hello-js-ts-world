@@ -1,6 +1,9 @@
 import React from 'react';
+import Greets from './components/Greets';
+import SummaryText from './components/SummaryText';
+import TextInput from './components/TextInput';
 
-function App() {
+// function App() {
     // const name = 'patty';
     // const name = '';
     // const greet = (name: string) => <p>hello, {name || 'Guest'}</p>;
@@ -44,17 +47,51 @@ function App() {
     // );
 
     // 複数の要素が含まれるときはトップレベルが一つの要素でないといけない
-    const elems = (
-        // <React.Fragment> の省略記法
-        <>
-        <div>foo</div>
-        <div>bar</div>
-        <div>baz</div>
-        </>
-    )
-    return(
-        <div>{elems}</div>
-    )
-}
+    // const elems = (
+    //     // <React.Fragment> の省略記法
+    //     <>
+    //     <div>foo</div>
+    //     <div>bar</div>
+    //     <div>baz</div>
+    //     </>
+    // )
+    // return(
+    //     <div>{elems}</div>
+    // )
+// }
+
+// JSX は ReactElement オブジェクトを生成するためのシンタックスシュガー
+// <MyComponent foo="bar">baz</MyComponent>
+// React.createElement(MyComponent, { foo: 'bar' }, 'baz');
+// {
+//     type: 'MyComponent',
+//     props: { foo: 'bar', children: 'baz'},
+//     key: null,
+//     ref: null,
+// }
+const App: React.FunctionComponent = () => (
+    <div className="App">
+        {/* 定義済みの Greets コンポーネントを JSX で呼んでいる */}
+        {/* name, times が props(Properties) */}
+        {/* コンポーネントを関数として考えた場合の、引数に相当するものが props */}
+        <Greets name="Patty" times={4}>
+            {/* 🙇🏿‍♂️ */}
+            <span role="img" aria-label="rabbit">🐇🐇🐇</span>
+        </Greets>
+        {/* Greets,SummaryText などはユーザ定義コンポーネントで大文字から始めないといけない */}
+        {/* 小文字から始まるタグ記述は組み込みコンポーネント(DefinitelyTyped)と解釈される */}
+        <SummaryText>
+            &lt;Summary&gt;<br />
+            Patty Hope-rabbit, along with her family, arrives in Maple Town,
+            a small town inhabited by friendly animals.
+
+            Soon, the Rabbit Family settles in Maple Town as mail carriers and the bitter,
+            yet sweet friendship of Patty and Bobby begins to blossom.
+        </SummaryText>
+        <TextInput />
+        {/* JSX の属性値の Boolean 値は true の場合は省略可能 */}
+        {/* <MyButton color="blue" disable={true} /> */}
+    </div>
+)
 
 export default App;
