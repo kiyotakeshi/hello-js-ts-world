@@ -40,6 +40,12 @@ nodenv install 14.4.0
 nodenv global 14.4.0
 ```
 ---
+
+```shell
+npx create-react-app hello-world --template typescript
+```
+
+---
 - Vue は MVVM
   - Model - View - ViewModel からなる構成
   - HTML テンプレートに処理内容を埋め込む
@@ -719,3 +725,26 @@ fs.readfile('foo.txt', (err, data) => {
 - HTML のように書いた <div> などは、 React の組み込みコンポーネントに変換される
 
 - 属性値や小要素はコンポーネントの props という関数の引数ようなもので渡される
+
+---
+
+- linter はコードを静的解析しコンパイルではじかれない潜在的なバグを警告する
+
+- JSON を普及させた Crockford が開発した JSLint は適用ルールのon/offができずコミュニティとの確執が生まれてきた
+    - forkして開発された JSHint は柔軟に使えて広がっていった
+
+- ESLint は開発者が独自の lint ルールを作れる拡張を前提としたツールで利用者を急激に増やした
+    - ドキュメントの充実
+    - 読みやすく柔軟に記述できる設定ファイル
+    - JSCS という別のツールも取り込まれた
+    - TSLint も取り込まれた
+
+- ESLint の設定をする
+    - Parser
+        - ソースコードを特定の言語使用に沿って解析してくれるライブラリ、TypeScript 用のものを使う
+        - @typescript-eslint/parser
+    - Plugin
+        - ESLint 組込のルール以外の独自ルールを追加
+        - @typescirpt-eslint/eslint-plugin
+    - Shareable Config
+        - 複数のルールの適用をまとめて設定、 Airbnb が提供する eslint-config-airbnb などが有名
