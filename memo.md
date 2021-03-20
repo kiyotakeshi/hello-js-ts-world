@@ -40,6 +40,12 @@ nodenv install 14.4.0
 nodenv global 14.4.0
 ```
 ---
+
+```shell
+npx create-react-app hello-world --template typescript
+```
+
+---
 - Vue は MVVM
   - Model - View - ViewModel からなる構成
   - HTML テンプレートに処理内容を埋め込む
@@ -719,3 +725,50 @@ fs.readfile('foo.txt', (err, data) => {
 - HTML のように書いた <div> などは、 React の組み込みコンポーネントに変換される
 
 - 属性値や小要素はコンポーネントの props という関数の引数ようなもので渡される
+
+---
+
+- linter はコードを静的解析しコンパイルではじかれない潜在的なバグを警告する
+
+- JSON を普及させた Crockford が開発した JSLint は適用ルールのon/offができずコミュニティとの確執が生まれてきた
+    - forkして開発された JSHint は柔軟に使えて広がっていった
+
+- ESLint は開発者が独自の lint ルールを作れる拡張を前提としたツールで利用者を急激に増やした
+    - ドキュメントの充実
+    - 読みやすく柔軟に記述できる設定ファイル
+    - JSCS という別のツールも取り込まれた
+    - TSLint も取り込まれた
+
+- ESLint の設定をする
+
+```shell
+npx create-react-app hello-world --template typescript
+
+cd hello-world
+
+# ESLint のアップデートに react-scripts が追いつかず、最新版が使えないことがあるのでインストール済みのものを使う
+$ npm ls eslint
+hello-world@0.1.0 /Users/kiyotakeshi/gitdir/javascript/hello-js-ts-world/hello-world
+└─┬ react-scripts@4.0.3
+  └── eslint@7.20.0 
+
+# TypeScript のパッケージを最新にする
+yarn upgrade-interactive --latest
+
+yarn upgrade typescript@latest
+
+# Microsoft がサポートする ESLint による公式の TypeScript 対応プロジェクトを追加
+$ yarn eslint --init
+yarn run v1.22.10
+$ /Users/kiyotakeshi/gitdir/javascript/hello-js-ts-world/hello-world/node_modules/.bin/eslint --init
+✔ How would you like to use ESLint? · problems
+✔ What type of modules does your project use? · esm
+✔ Which framework does your project use? · react
+✔ Does your project use TypeScript? · No / Yes
+✔ Where does your code run? · browser✔ What format do you want your config file to be in? · JavaScript
+Local ESLint installation not found.
+The config that you've selected requires the following dependencies:
+
+eslint-plugin-react@latest @typescript-eslint/eslint-plugin@latest @typescript-eslint/parser@latest eslint@latest
+✔ Would you like to install them now with npm? · No / Yes
+```
