@@ -740,6 +740,14 @@ fs.readfile('foo.txt', (err, data) => {
     - TSLint も取り込まれた
 
 - ESLint の設定をする
+    - Parser
+        - ソースコードを特定の言語使用に沿って解析してくれるライブラリ、TypeScript 用のものを使う
+        - @typescript-eslint/parser
+    - Plugin
+        - ESLint 組込のルール以外の独自ルールを追加
+        - @typescirpt-eslint/eslint-plugin
+    - Shareable Config
+        - 複数のルールの適用をまとめて設定、 Airbnb が提供する eslint-config-airbnb などが有名
 
 ```shell
 npx create-react-app hello-world --template typescript
@@ -758,17 +766,12 @@ yarn upgrade-interactive --latest
 yarn upgrade typescript@latest
 
 # Microsoft がサポートする ESLint による公式の TypeScript 対応プロジェクトを追加
-$ yarn eslint --init
-yarn run v1.22.10
-$ /Users/kiyotakeshi/gitdir/javascript/hello-js-ts-world/hello-world/node_modules/.bin/eslint --init
-✔ How would you like to use ESLint? · problems
-✔ What type of modules does your project use? · esm
-✔ Which framework does your project use? · react
-✔ Does your project use TypeScript? · No / Yes
-✔ Where does your code run? · browser✔ What format do you want your config file to be in? · JavaScript
-Local ESLint installation not found.
-The config that you've selected requires the following dependencies:
+yarn eslint --init
 
-eslint-plugin-react@latest @typescript-eslint/eslint-plugin@latest @typescript-eslint/parser@latest eslint@latest
-✔ Would you like to install them now with npm? · No / Yes
+# yarn でパッケージを追加
+yarn add -D eslint-plugin-react@latest @typescript-eslint/eslint-plugin@latest @typescript-eslint/parser@latest
+
+typesync
+
+yarn
 ```
