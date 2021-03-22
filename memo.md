@@ -910,3 +910,61 @@ fs.readfile('foo.txt', (err, data) => {
 
 - スタイルガイドとの共存、開発者にメンテナンス性の高いコンポーネント設計を促すというメリットは今でも有効
 
+---
+- state を伴ったロジックを切り出して再利用するための現時点での最適解が Hooks
+
+
+- mixins というプロパティにコンポーネントに追加したいクラスメンバーを任意のオブジェクトに格納して登録する手法が取られていた
+
+```js
+const CounterMixin = {
+    getInitialState: () => ({ count: 0});
+    reset: () => {
+        this.setState({ count: 0});
+    }
+    (略)
+}
+
+// 昔はクラスコンポーネントしかなく
+// React.createClass という静的メソッドを使って生成した
+const CounterComponent = React.createClass({
+    propTypes: {
+        max: React.PropTypes.number.isRequired,
+    },
+    // クラスコンポーネントのメンバーを切り出して
+    // mixins プロパティでコンポーネントに登録
+    mixins: [CounterMixin],
+    (略)
+})
+```
+
+- mixins はコンポーネントとの間に依存関係を持ってしまう
+    - ミックス先のコンポーネントに特定の名前の props,state があることを前提にした書き方でロジックを再利用しづらい
+    - *props,state, メンバー変数やメソッド名が衝突しないように気を配らないといけない*
+    - コンポーネントと違い階層構造がないフラットな関係で依存関係やデータの流れの把握が難しい
+        - mixins がコンポーネントのメソッドを呼び出したり、その逆だったり...
+    - コードの変更が難しい
+
+- React は17年の　16.6 で mixios を廃止(Vue.js ではまだ現役)
+
+- 代替として Higher Order Component(HOC) の使用が推奨されていた
+    - 関数を引数にとったり関数を戻り値として返す高階関数の手法をコンポーネントに応用
+
+```ts
+type Props = { target: string };
+
+// 関数を変数(HelloComponent)に代入
+// props の target に withTarget という HOC で外から target の実態を与えて、 Hello で表示
+// 受け取る側のコンポーネントは HOC から渡される名前の props(target) を受け皿として用意しておく必要がある
+const HelloComponent: FC<Props> = ({ target }) => <h1>Hello {target}! </h1>;
+
+// 関数を引数に取る高階関数
+// withTarget はコンポーネントを受け取り、 target の実体を注入したコンポーネントを返す関数 = HOC
+export default withTarget(HelloComponent);
+```
+
+```ts
+// 引数に Component を受け取る関数を変数(withTarget)に代入
+// 受け取った関数に target の実体を与える
+const withTarget = (WrappedComponent: FC<Props>) => WrappedComponent({ target: 'Patty' });
+```
