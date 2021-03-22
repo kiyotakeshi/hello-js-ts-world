@@ -968,3 +968,38 @@ export default withTarget(HelloComponent);
 // 受け取った関数に target の実体を与える
 const withTarget = (WrappedComponent: FC<Props>) => WrappedComponent({ target: 'Patty' });
 ```
+
+- HOC の対抗として Render Props パターンが登場
+    - React Elements を返す関数を props として受け取って、それを自身のレンダリングに使う特殊なコンポーネントを使った手法
+    - レンダリングのための関数を props として受け取れるから render props
+
+```ts
+type Props = {target:string};
+const HelloComponent: FC<Props> = ({target}) => <h1>Hello {target}!</h1>;
+```
+
+```jsx
+// render props で target に任意の文字列を与える TargetProvider コンポーネント
+// render という props に HelloComponent が渡されている
+<TargetProvider render={HelloComponent} />
+```
+
+```ts
+// HelloComponent を render という名前(任意)の props として受け取り、 target に 'Patty' を設定して返す
+const TargetProvider: FC<{render: FC<Props>}> = ({render}) => render({target: 'Patty'});
+```
+
+- Hooks は既存の技術を利用した設計パターンだった HOC, Render Props と違い、 React 公式の機能として提供されたもの
+    - 状態やロジックの分離を小手先のテクニックで行うのではなく、新しい仕組みを 仮想DOM の外に用意
+    - *コンポーネントにロジックを抱えた別コンポーネントをかぶせるのではなく、コンポーネントシステムの外に状態やロジックを持つ手段を提供*
+    - *関数コンポーネントだけでアプリケーションが作れるようになった = Hooks は関数コンポーネント内でしか使えない*
+
+- クラスコンポーネントは使わない = ライフサイクルメソッドは使えないように
+    - 別の切り口から副作用を扱う
+    - ライフサイクルメソッドを使うと、実現したい機能が時間的なフェーズでぶつ切りにされ細切れになる
+    - 別々の機能がフェーズが同じというだけで同じ箇所にまとめられる
+    - *処理の流れが追いづらいコードになり、機能単位でのロジックの切り出しを難しくした*
+
+- Hooks では時間によって切り分けるのではなく、機能ごとに副作用を伴う処理をまとめて記述できる仕組みを提供
+
+    
