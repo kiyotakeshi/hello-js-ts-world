@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Card, Icon, Statistic } from 'semantic-ui-react';
 import { getPrimes } from './utils/math-tool';
 import './Timer.css';
@@ -16,6 +16,12 @@ const Timer: FC<TimeProps> = ({ limit }) => {
     // primes には素数の配列が入る  [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59]
     const primes = useMemo(() => getPrimes(limit), [limit]);
 
+    // useRef によりあらゆる書き換え可能な値を保持できる
+    // state と違い、再レンダリングを伴わずにデータを関数コンポーネントで保存しておきたい時に使用
+    // タイマーIDを保持することで limit が変更されたときにこのIDを使用してクリア処理を行う
+    // 最初に渡せる値がないため、 setInterval 関数の戻り値 <NodeJS.Timeout> を型引数として与えている
+    const timerId = useRef<NodeJS.Timeout>();
+
     // 関数は値が同じなら同一のものとみなされるプリミティブ型の変数と違い
     // 内容が同じでも、定義ごとに指しているメモリのアドレスが異なるから、別物と判断される
     // const reset = (): void => setTimeLeft(limit);
@@ -26,14 +32,22 @@ const Timer: FC<TimeProps> = ({ limit }) => {
 
     const tick = (): void => setTimeLeft((t) => t - 1);
 
-    // 第二引数に空の配列を渡しているので、初回レンダリング時のみ setInterval が実行
+    // limit が変わった際に実行
     useEffect(() => {
-        // TODO: limit が変わった際に、残り時間をリセットした上で以前のカウントダウンタスクをクリアする
-        const timerId = setInterval(tick, 1000);
+        // タイマーIDを使用してカウントダウンタスクをクリアする
+        const clearTimer = () => {
+            if (timerId.current) clearInterval(timerId.current);
+        };
 
-        // コンポーネントのアンマウント時に clearInterval() の実行関数を実行
-        return () => clearInterval(timerId);
-    }, []);
+        reset();
+        clearTimer();
+
+        // 新しいタイマーIDを timerID.current に格納
+        timerId.current = setInterval(tick, 1000);
+
+        // コンポーネントのアンマウント時に実行
+        return clearTimer;
+    }, [limit, reset]);
 
     useEffect(() => {
         // console.log('useEffect');
