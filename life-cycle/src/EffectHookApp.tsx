@@ -1,5 +1,6 @@
 import { FC } from 'react';
-import Timer from './Timer';
+// import Timer from './Timer';
+import PrimeTimer from './PrimeTimer';
 import './App.css';
 
 const EffectHookApp: FC = () => (
@@ -7,7 +8,8 @@ const EffectHookApp: FC = () => (
         <header>
             <h1>タイマー</h1>
         </header>
-        <Timer limit={60} />
+        {/* <Timer limit={60} /> */}
+        <PrimeTimer limit={60} />
     </div>
 );
 
