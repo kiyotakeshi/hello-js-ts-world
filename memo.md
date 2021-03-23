@@ -1002,4 +1002,26 @@ const TargetProvider: FC<{render: FC<Props>}> = ({render}) => render({target: 'P
 
 - Hooks では時間によって切り分けるのではなく、機能ごとに副作用を伴う処理をまとめて記述できる仕組みを提供
 
-    
+- State Hook を使用し、クラスコンポーネントの state に相当するものを関数コンポーネントでも使用する
+    - useState 関数を使う
+
+```js
+// useState の戻り値は state 変数とその state 更新関数をタプルとして返す
+// 配列の分割代入をする
+const [count,setCount] = useState(0);
+```
+
+- 外部API にリクエストしてユーザ情報を取得、そのオブジェクトを state に入れる場合
+    - 初期値として渡せる型を持ったデータがないため、型引数を渡す
+
+```ts
+// User オブジェクトを型引数として渡し、引数には何も渡さない
+// author は User オブジェクトを格納できる、初期値が undefined の state 変数となる
+// userState<User | null>(null) とすると初期値に明示的に null を入れられる
+const [author, setAuthor] = useState<User>();
+
+// 初期値を渡しながらも型推論が使えない場合の書き方
+// Article オブジェクトの配列を格納したく、その初期値は空配列にしたい
+// [] だけを渡すと何の配列かコンパイラはわからないので型引数で Article[] を渡す
+const [articles, setArticles] = useState<Article[]>([]);
+```
